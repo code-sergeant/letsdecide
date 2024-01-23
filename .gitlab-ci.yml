@@ -1,0 +1,9 @@
+pages:
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist # or replace with 'build' if that's where your output is
+  only:
+    - master # or main, depending on your default branch name
