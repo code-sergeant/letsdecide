@@ -17,28 +17,33 @@ interface Scores {
   crossFunctionalCoordination: { value: number, description: string };
   documentationKnowledgeTransfer: { value: number, description: string };
 }
+const defaultScores = {
+  technicalComplexity: { value: 0, description: 'Technical Complexity: Consider the complexity of server-side logic, database interactions, APIs, data processing, and integration with other services or microservices. Assess the complexity related to UI/UX design, interactivity, state management, responsiveness, and client-side logic.' },
+  dependencies: { value: 0, description: 'Dependencies: Evaluate dependencies within the project, such as modules, components, or services that the story depends on. Also consider third-party services, libraries, or APIs that the feature relies on and the potential risks or delays they might introduce.' },
+  integrationDataMigration: { value: 0, description: 'Integration and Data Migration: Assess the effort required to integrate the new feature with existing parts of the application. Consider the complexity of any data migration or transformation that might be necessary.' },
+  performanceConsiderations: { value: 0, description: 'Performance Considerations: Analyze if the new feature will impact the application’s performance and the effort required to optimize it.' },
+  securityCompliance: { value: 0, description: 'Security and Compliance: Evaluate security requirements, especially if the feature involves handling sensitive data or needs to comply with specific regulations.' },
+  testingEfforts: { value: 0, description: 'Testing Efforts: Consider the complexity of writing unit tests, integration tests, and end-to-end tests. Think about the effort required for manual testing, especially for UI/UX aspects.' },
+  scalabilityMaintainability: { value: 0, description: 'Scalability and Maintainability: Assess how the new feature will impact the scalability of the application. Consider the maintainability of the code being added or modified.' },
+  knowledgeSkillSet: { value: 0, description: `Knowledge and Skillset: Evaluate familiarity with the technologies and tools involved. Consider the learning curve if the feature requires new technologies or approaches.` },
+  uncertaintyRisk: { value: 0, description: 'Uncertainty and Risk: Factor in uncertainties or risks that could impact the delivery, such as unclear requirements or potential technical hurdles.' },
+  userExperienceDesignComplexity: { value: 0, description: 'User Experience Design Complexity: Consider the complexity of the design and the user experience, especially for features with significant UI/UX components.' },
+  crossFunctionalCoordination: { value: 0, description: 'Cross Functional Coordination: Assess the need for coordination with other teams, such as Platform, in order to accomplish the task.' },
+  documentationKnowledgeTransfer: { value: 0, description: 'Documentation and Knowledge Transfer: Include the effort required for documentation and knowledge transfer, especially for complex features that might impact multiple parts of the system.' }
+}
 
 const App: React.FC = () => {
-  const [scores, setScores] = useState<Scores>({
-    technicalComplexity: { value: 0, description: 'Technical Complexity: Consider the complexity of server-side logic, database interactions, APIs, data processing, and integration with other services or microservices. Assess the complexity related to UI/UX design, interactivity, state management, responsiveness, and client-side logic.' },
-    dependencies: { value: 0, description: 'Dependencies: Evaluate dependencies within the project, such as modules, components, or services that the story depends on. Also consider third-party services, libraries, or APIs that the feature relies on and the potential risks or delays they might introduce.' },
-    integrationDataMigration: { value: 0, description: 'Integration and Data Migration: Assess the effort required to integrate the new feature with existing parts of the application. Consider the complexity of any data migration or transformation that might be necessary.' },
-    performanceConsiderations: { value: 0, description: 'Performance Considerations: Analyze if the new feature will impact the application’s performance and the effort required to optimize it.' },
-    securityCompliance: { value: 0, description: 'Security and Compliance: Evaluate security requirements, especially if the feature involves handling sensitive data or needs to comply with specific regulations.' },
-    testingEfforts: { value: 0, description: 'Testing Efforts: Consider the complexity of writing unit tests, integration tests, and end-to-end tests. Think about the effort required for manual testing, especially for UI/UX aspects.' },
-    scalabilityMaintainability: { value: 0, description: 'Scalability and Maintainability: Assess how the new feature will impact the scalability of the application. Consider the maintainability of the code being added or modified.' },
-    knowledgeSkillSet: { value: 0, description: `Knowledge and Skillset: Evaluate familiarity with the technologies and tools involved. Consider the learning curve if the feature requires new technologies or approaches.` },
-    uncertaintyRisk: { value: 0, description: 'Uncertainty and Risk: Factor in uncertainties or risks that could impact the delivery, such as unclear requirements or potential technical hurdles.' },
-    userExperienceDesignComplexity: { value: 0, description: 'User Experience Design Complexity: Consider the complexity of the design and the user experience, especially for features with significant UI/UX components.' },
-    crossFunctionalCoordination: { value: 0, description: 'Cross Functional Coordination: Assess the need for coordination with other teams, such as Platform, in order to accomplish the task.' },
-    documentationKnowledgeTransfer: { value: 0, description: 'Documentation and Knowledge Transfer: Include the effort required for documentation and knowledge transfer, especially for complex features that might impact multiple parts of the system.' }
-  });
+  const [scores, setScores] = useState<Scores>(defaultScores);
   const [description, setDescription] = useState('');
 
   const [result, setResult] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setScores({ ...scores, [e.target.name]: { description: scores[e.target.name as keyof Scores].description, value: parseInt(e.target.value, 10) } });
+    const totalScore = Object.values(scores).reduce((acc, curr) => acc + curr.value, 0);
+    const mappedScore = Math.round(totalScore / 3);
+    setResult(`Total Score: ${totalScore}, Fibonacci Mapping: ${fibonacciMapping(mappedScore)}`);
   };
 
   const fibonacciMapping = (score: number): string => {
@@ -49,12 +54,10 @@ const App: React.FC = () => {
     return 'Extremely complex (8). When a story is this complex, it usually means that it is not clear what the requirements are, or the requirements are not well defined. It also means that the story in its current state is too large to be completed in a single sprint. This story needs to be broken into smaller stories.';
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const totalScore = Object.values(scores).reduce((acc, curr) => acc + curr.value, 0);
-    const mappedScore = Math.round(totalScore / 3);
-    setResult(`Total Score: ${totalScore}, Fibonacci Mapping: ${fibonacciMapping(mappedScore)}`);
-  };
+  const resetValues = () => {
+    setScores(defaultScores);
+    setResult('');
+  }
 
   return (
     <div className={'container max-lg mx-auto p-8 text-center'}>
@@ -68,9 +71,8 @@ const App: React.FC = () => {
         <li className='text-xl'><span className='font-semibold'>Medium (2 Points):</span> The factor presents moderate complexity or impact to the story.</li>
         <li className='text-xl'><span className='font-semibold'>High (3 Points):</span> The factor presents significant complexity or impact to the story.</li>
       </ol>
-
-      <form onSubmit={handleSubmit}>
-        {Object.keys(scores).map((score) => (
+      <section>
+      {Object.keys(scores).map((score) => (
           <div key={score} className='text-xl my-6'>
             <label>
               <QuestionMarkCircleIcon className="inline m-2 h-4" onClick={() => { setDescription(scores[score as keyof Scores].description); setOpen(true); }} />
@@ -84,12 +86,13 @@ const App: React.FC = () => {
             </label>
           </div>
         ))}
-        <Button type="submit" className={'text-2xl'}>Calculate</Button>
-      </form>
+        {/* <Button type="submit" className={'text-2xl'}>Calculate</Button> */}
+        <Button type="button" onClick={resetValues} outline className={'text-2xl ml-4'}>Reset</Button>
       {result && <p className={`text-2xl my-6 font-semibold ${result.includes('8') ? 'text-red-800' : 'text-green-600'}`} >{result}</p>}
       <Dialog open={open} onClose={() => setOpen(false)} size='3xl' className={'rounded-xl p-10'}>
         {description}
       </Dialog>
+      </section>
     </div>
   );
 };
