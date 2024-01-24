@@ -87,7 +87,7 @@ const App: React.FC = () => {
         <Button type="submit" className={'text-2xl'}>Calculate</Button>
       </form>
       {result && <p className={`text-2xl my-6 font-semibold ${result.includes('8') ? 'text-red-800' : 'text-green-600'}`} >{result}</p>}
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={open} onClose={() => setOpen(false)} size='3xl' className={'rounded-xl p-10'}>
         {description}
       </Dialog>
     </div>
