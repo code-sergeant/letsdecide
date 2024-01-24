@@ -1,5 +1,5 @@
 import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { Button } from './components/button';
 import { Dialog } from './components/dialog';
 
@@ -88,7 +88,7 @@ const App: React.FC = () => {
         ))}
         {/* <Button type="submit" className={'text-2xl'}>Calculate</Button> */}
         <Button type="button" onClick={resetValues} outline className={'text-2xl ml-4'}>Reset</Button>
-      {result && <p className={`text-2xl my-6 font-semibold ${result.includes('8') ? 'text-red-800' : 'text-green-600'}`} >{result}</p>}
+      {result && <p className={`text-2xl my-6 font-semibold ${result.includes('(8)') ? 'text-red-800' : 'text-green-600'}`} >{result}</p>}
       <Dialog open={open} onClose={() => setOpen(false)} size='3xl' className={'rounded-xl p-10'}>
         {description}
       </Dialog>
