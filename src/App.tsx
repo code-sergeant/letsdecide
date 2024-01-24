@@ -1,5 +1,5 @@
 import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState, useEffect } from 'react';
 import { Button } from './components/button';
 import { Dialog } from './components/dialog';
 
@@ -41,11 +41,14 @@ const App: React.FC = () => {
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setScores({ ...scores, [e.target.name]: { description: scores[e.target.name as keyof Scores].description, value: parseInt(e.target.value, 10) } });
+  };
+
+  useEffect(() => {
     const totalScore = Object.values(scores).reduce((acc, curr) => acc + curr.value, 0);
     const mappedScore = Math.round(totalScore / 3);
     setResult(`Total Score: ${totalScore}, Fibonacci Mapping: ${fibonacciMapping(mappedScore)}`);
-  };
-
+  }, [scores]);
+  
   const fibonacciMapping = (score: number): string => {
     if (score <= 1) return 'Trivial task (0-1)';
     if (score === 2) return 'Simple task (2)';
